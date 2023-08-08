@@ -42,4 +42,6 @@
 //     return photo.save();
 // };
 
-//! import model
+const Auction = require('../models/Auction');
+
+exports.create = (auctionData) => Auction.create(auctionData);
