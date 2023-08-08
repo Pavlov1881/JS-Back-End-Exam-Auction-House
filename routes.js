@@ -2,10 +2,11 @@ const router = require('express').Router();
 
 const homeController = require('./controllers/homeController');
 const authController = require('./controllers/authController');
-//! import the new controller
+const auctionController = require('./controllers/auctionController');
 
 router.use(homeController);
 router.use(authController);
+router.use('/auctions', auctionController);
 
 router.all('*', (req, res) => {
     res.render('home/404');
