@@ -6,20 +6,20 @@ const { SECRET } = require('../constants');
 
 exports.findByEmail = (email) => User.findOne({ email });
 
-exports.register = async (email, username, password, confirmPassword) => {
+exports.register = async (email, firstName, lastName, password, repeatPassword) => {
 
     //! validate password
     if (password.length <= 5) {
         throw new Error('Password too short');
     }
 
-    if (confirmPassword !== password) {
+    if (repeatPassword !== password) {
         throw new Error('Password don`t match!');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await User.create({ email, username, password: hashedPassword });
+    await User.create({ email, firstName, lastName, password: hashedPassword });
 
     // auto login after register
     return this.login(email, password);
@@ -44,7 +44,6 @@ exports.login = async (email, password) => {
     const payload = {
         _id: user._id,
         email,
-        username: user.username,
     };
 
     const token = await jwt.sign(payload, SECRET);
