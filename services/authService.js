@@ -9,7 +9,7 @@ exports.findByEmail = (email) => User.findOne({ email });
 exports.register = async (email, username, password, confirmPassword) => {
 
     //! validate password
-    if (password.length <= 3) {
+    if (password.length <= 5) {
         throw new Error('Password too short');
     }
 
