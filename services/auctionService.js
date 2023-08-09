@@ -53,6 +53,8 @@ exports.getById = (auctionId) => Auction.findById(auctionId);
 
 exports.edit = (auctionId, auctionData) => Auction.findByIdAndUpdate(auctionId, auctionData);
 
+exports.delete = (auctionId) => Auction.findByIdAndDelete(auctionId);
+
 exports.bidd = (auctionId, userId) => {
     const auction = Auction.findById(auctionId);
     auction.bidder.push(userId);

@@ -52,6 +52,18 @@ router.post('/:auctionId/edit', isLogged, async (req, res) => {
     }
 });
 
+router.get('/:auctionId/delete', isLogged, async (req, res) => {
+    try {
+        const auctionId = req.params.auctionId;
+        await auctionService.delete(auctionId);
+
+        res.redirect('/auctions/catalog');
+
+    } catch (error) {
+        res.render(`auction/${auctionId}/details`, { error: getErrorMessage(error) });
+    }
+});
+
 router.post('/publish', isLogged, async (req, res) => {
     try {
         const authorId = req.user._id;
