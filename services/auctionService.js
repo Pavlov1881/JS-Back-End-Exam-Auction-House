@@ -45,3 +45,7 @@
 const Auction = require('../models/Auction');
 
 exports.create = (auctionData) => Auction.create(auctionData);
+
+exports.getAll = () => Auction.find();
+
+exports.getById = (auctionId) => Auction.findById(auctionId); 
