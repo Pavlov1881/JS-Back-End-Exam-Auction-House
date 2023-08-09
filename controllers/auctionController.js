@@ -14,16 +14,17 @@ router.get('/catalog', async (req, res) => {
 
 router.get('/:auctionId/details', async (req, res) => {
     try {
-        const userId = req.user?._id;
+        // const userId = req.user._id;
         const auctionId = req.params.auctionId;
 
-        const selectedAuction = await auctionService.getById(auctionId).lean();
-        const isAuthor = userId == selectedAuction.author;
+        const selectedAuction = await auctionService.getById(auctionId).lean().populate('author');
+        const isAuthor = selectedAuction.author._id?.toString() === req.user?._id;
+        console.log(isAuthor);
 
         res.render('auction/details', { selectedAuction, isAuthor });
 
     } catch (error) {
-        res.render('auctions/catalog', { error: getErrorMessage(error) });
+        res.render('auction/catalog', { error: getErrorMessage(error) });
     }
 });
 
@@ -32,13 +33,32 @@ router.get('/publish', isLogged, async (req, res) => {
     res.render('auction/create');
 });
 
+router.get('/:auctionId/edit', isLogged, async (req, res) => {
+    const auctionId = req.params.auctionId;
+    const selectedAuction = await auctionService.getById(auctionId).lean();
+
+    res.render('auction/edit', { selectedAuction });
+});
+
+router.post('/:auctionId/edit', isLogged, async (req, res) => {
+    try {
+        const auctionId = req.params.auctionId;
+        const auctionData = req.body;
+
+        const updatedAuction = await auctionService.edit(auctionId, auctionData);
+        res.redirect(`/auctions/${auctionId}/details`)
+    } catch (error) {
+
+    }
+});
+
 router.post('/publish', isLogged, async (req, res) => {
     try {
         const authorId = req.user._id;
         const auctionData = { ...req.body, author: authorId };
 
         await auctionService.create(auctionData);
-        res.redirect('auction/catalog');
+        res.redirect('/auctions/catalog');
 
     } catch (error) {
         res.render('auction/create', { error: getErrorMessage(error) });
