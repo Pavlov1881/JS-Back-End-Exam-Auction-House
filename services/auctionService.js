@@ -44,8 +44,17 @@
 
 const Auction = require('../models/Auction');
 
+
 exports.create = (auctionData) => Auction.create(auctionData);
 
 exports.getAll = () => Auction.find();
 
-exports.getById = (auctionId) => Auction.findById(auctionId); 
+exports.getById = (auctionId) => Auction.findById(auctionId);
+
+exports.edit = (auctionId, auctionData) => Auction.findByIdAndUpdate(auctionId, auctionData);
+
+exports.bidd = (auctionId, userId) => {
+    const auction = Auction.findById(auctionId);
+    auction.bidder.push(userId);
+    auction.save();
+}
